@@ -1,5 +1,6 @@
 toolkit/Bin/
 toolkit/obj/
 *.suo
-HorizontalLoopingSelectorSample\Bin
-HorizontalLoopingSelectorSample\obj
+*.docstates
+HorizontalLoopingSelectorSample/Bin
+HorizontalLoopingSelectorSample/obj
