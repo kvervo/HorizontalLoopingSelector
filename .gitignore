@@ -1,0 +1,5 @@
+toolkit/Bin/
+toolkit/obj/
+*.suo
+HorizontalLoopingSelectorSample\Bin
+HorizontalLoopingSelectorSample\obj
