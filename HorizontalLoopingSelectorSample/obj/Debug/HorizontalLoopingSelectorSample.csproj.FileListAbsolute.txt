@@ -1,0 +1,22 @@
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\ResolveAssemblyReference.cache
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\App.g.i.cs
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\MainPage.g.i.cs
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.g.resources
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\ApplicationIcon.png
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\Background.png
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\HorizontalLoopingSelectorSample.dll
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\HorizontalLoopingSelectorSample.pdb
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\AppManifest.xaml
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\HorizontalLoopingSelectorSample.xap
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\Microsoft.Phone.Controls.Toolkit.dll
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\Microsoft.Phone.Controls.Toolkit.pdb
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\Bin\Debug\Microsoft.Phone.Controls.Toolkit.xml
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.dll
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.pdb
+c:\users\mishko\documents\visual studio 2010\Projects\HorizontalLoopingSelectorSample\HorizontalLoopingSelectorSample\obj\Debug\XapCacheFile.xml
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\ResolveAssemblyReference.cache
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\App.g.i.cs
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\MainPage.g.i.cs
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.g.resources
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.dll
+D:\Dev\HorizontalLoopingSelector\HorizontalLoopingSelectorSample\obj\Debug\HorizontalLoopingSelectorSample.pdb
