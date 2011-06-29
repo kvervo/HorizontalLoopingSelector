@@ -4,6 +4,12 @@ The [Silverlight Toolkit](http://silverlight.codeplex.com/ "Silverlight Toolkit 
 
 However the limitation of the current Looping Selector is that expands only vertically. I wanted to do it horizontally.
 
+This is a sample project showing the use of HorizontalLoopingSelector.
+
+**Based on [Silverlight Toolkit LoopingSelector Demo](http://compiledexperience.com/blog/posts/using-loopingselector-from-the-silverlight-toolkit "Using LoopingSelector from the Silverlight Toolkit") by Nigel Sampson**
+
+
+
 License
 -------
 This source is subject to the Microsoft Public License (Ms-PL).
