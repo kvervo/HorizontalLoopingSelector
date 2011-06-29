@@ -24,12 +24,12 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="HorinzontalLoopingSelector" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="HorizontalLoopingSelector" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="Sample" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
             <Grid.Resources>
                 <DataTemplate x:Key="NumberTemplate">
                     <Grid>
@@ -61,6 +61,31 @@
                     <local:NumbersDataSource Maximum="0" Minimum="-100" />
                 </toolkit:HorizontalLoopingSelector.DataSource>
             </toolkit:HorizontalLoopingSelector>
+
+            
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <toolkit:LoopingSelector Grid.Column="0" Margin="12" Width="128" ItemSize="128,128" ItemTemplate="{StaticResource NumberTemplate}">
+                <toolkit:LoopingSelector.DataSource>
+                    <local:NumbersDataSource />
+                </toolkit:LoopingSelector.DataSource>
+            </toolkit:LoopingSelector>
+
+            <toolkit:LoopingSelector Grid.Column="1" Margin="12" Width="128" ItemSize="128,128" ItemTemplate="{StaticResource NumberTemplate}">
+                <toolkit:LoopingSelector.DataSource>
+                    <local:NumbersDataSource Minimum="10" Maximum="20" />
+                </toolkit:LoopingSelector.DataSource>
+            </toolkit:LoopingSelector>
+
+            <toolkit:LoopingSelector Grid.Column="2" Margin="12" Width="128" ItemSize="128,128" ItemTemplate="{StaticResource NumberTemplate}">
+                <toolkit:LoopingSelector.DataSource>
+                    <local:NumbersDataSource Maximum="0" Minimum="-100" />
+                </toolkit:LoopingSelector.DataSource>
+            </toolkit:LoopingSelector>-->
 
         </Grid>
     </Grid>

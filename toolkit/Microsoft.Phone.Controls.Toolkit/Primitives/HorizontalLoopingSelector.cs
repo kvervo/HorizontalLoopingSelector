@@ -756,7 +756,6 @@ namespace Microsoft.Phone.Controls.Primitives
                 else
                 {
                     child.SetState(isExpanded ? HorizontalLoopingSelectorItem.State.Expanded : HorizontalLoopingSelectorItem.State.Normal, true);
-                    //child.SetState(HorizontalLoopingSelectorItem.State.Normal, true);
                 }
             }
         }
