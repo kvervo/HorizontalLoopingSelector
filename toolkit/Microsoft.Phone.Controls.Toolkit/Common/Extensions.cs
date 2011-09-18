@@ -4,13 +4,11 @@
 // All other rights reserved.
 
 using System;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
-#if WINDOWS_PHONE
 namespace Microsoft.Phone.Controls
-#else
-namespace System.Windows.Controls
-#endif
 {
     /// <summary>
     /// This set of internal extension methods provide general solutions and 
@@ -19,6 +17,8 @@ namespace System.Windows.Controls
     /// </summary>
     internal static partial class Extensions
     {
+        private const string ExternalAddress = "app://external/";
+
         /// <summary>
         /// Inverts a Matrix. The Invert functionality on the Matrix type is 
         /// internal to the framework only. Since Matrix is a struct, an out 
@@ -64,5 +64,50 @@ namespace System.Windows.Controls
         {
             return s.IndexOf(value, comparison) >= 0;
         }
+
+        /// <summary>
+        /// Returns whether the page orientation is in portrait.
+        /// </summary>
+        /// <param name="orientation">Page orientation</param>
+        /// <returns>If the orientation is portrait</returns>
+        public static bool IsPortrait(this PageOrientation orientation)
+        {
+            return (PageOrientation.Portrait == (PageOrientation.Portrait & orientation));
+        }
+
+        /// <summary>
+        /// Returns whether the dark visual theme is currently active.
+        /// </summary>
+        /// <param name="resources">Resource Dictionary</param>
+        public static bool IsDarkThemeActive(this ResourceDictionary resources)
+        {
+            return ((Visibility)resources["PhoneDarkThemeVisibility"] == Visibility.Visible);
+        }
+
+        /// <summary>
+        /// Returns whether the uri is from an external source.
+        /// </summary>
+        /// <param name="uri">The uri</param>
+        public static bool IsExternalNavigation(this Uri uri)
+        {
+            return (ExternalAddress == uri.ToString());
+        }
+
+        /// <summary>
+        /// Registers a property changed callback for a given property.
+        /// </summary>
+        /// <param name="element">The element registering the notification</param>
+        /// <param name="propertyName">Property name to register</param>
+        /// <param name="callback">Callback function</param>
+        /// <remarks>This allows a child to be notified of when a property declared in its parent is changed.</remarks>
+        public static void RegisterNotification(this FrameworkElement element, string propertyName, PropertyChangedCallback callback)  
+        {
+            DependencyProperty prop = DependencyProperty.RegisterAttached("Notification" + propertyName,  
+                                                                          typeof(object),
+                                                                          typeof(FrameworkElement),  
+                                                                          new PropertyMetadata(callback));  
+          
+            element.SetBinding(prop, new Binding(propertyName) { Source = element });  
+        }  
     }
 }

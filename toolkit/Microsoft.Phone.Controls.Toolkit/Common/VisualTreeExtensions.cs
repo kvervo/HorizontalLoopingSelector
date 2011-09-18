@@ -1,8 +1,9 @@
 ﻿// (c) Copyright Microsoft Corporation.
-// This source is subject to [###LICENSE_NAME###].
-// Please see [###LICENSE_LINK###] for details.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace System.Windows.Controls
     /// </summary>
     internal static class VisualTreeExtensions
     {
+        #region GetVisualChildren(...)
         /// <summary>
         /// Retrieves all the visual children of a framework element.
         /// </summary>
@@ -30,7 +32,9 @@ namespace System.Windows.Controls
                 yield return VisualTreeHelper.GetChild(parent, counter);
             }
         }
+        #endregion
 
+        #region GetLogicalChildrenBreadthFirst(...)
         /// <summary>
         /// Retrieves all the logical children of a framework element using a 
         /// breadth-first search.  A visual element is assumed to be a logical 
@@ -58,5 +62,6 @@ namespace System.Windows.Controls
                 }
             }
         }
+        #endregion
     }
 }

@@ -17,6 +17,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Represents a switch that can be toggled between two states.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [TemplateVisualState(Name = NormalState, GroupName = CommonStates)]
     [TemplateVisualState(Name = DisabledState, GroupName = CommonStates)]
     [TemplatePart(Name = SwitchPart, Type = typeof(ToggleButton))]

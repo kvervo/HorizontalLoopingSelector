@@ -21,7 +21,7 @@ namespace System.Windows.Controls
     /// bottom.  When elements extend beyond the panel edge, elements are
     /// positioned in the next row or column.
     /// </summary>
-    /// <QualityBand>Stable</QualityBand>
+    /// <QualityBand>Mature</QualityBand>
     public partial class WrapPanel : Panel
     {
         /// <summary>

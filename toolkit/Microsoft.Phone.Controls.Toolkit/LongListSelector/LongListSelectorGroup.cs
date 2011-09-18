@@ -23,58 +23,30 @@ namespace Microsoft.Phone.Controls
         private bool _applicationBarVisible;
         private Border _border;
         private LongListSelectorItemsControl _itemsControl;
+        private Popup _groupSelectorPopup;
 
         private static readonly double _screenWidth = Application.Current.Host.Content.ActualWidth;
         private static readonly double _screenHeight = Application.Current.Host.Content.ActualHeight;
-
-        /// <summary>
-        /// Will invoke the group view, if a GroupItemTemplate has been defined.
-        /// </summary>
-        public void DisplayGroupView()
-        {
-            StopScrolling();
-
-            if (GroupItemTemplate != null && !IsFlatList)
-            {
-                OpenPopup();
-            }
-        }
-
-        /// <summary>
-        /// Close the group view unconditionally (do not raise the GroupViewClosingEventArgs event.)
-        /// </summary>
-        public void CloseGroupView()
-        {
-            ClosePopup(null, false);
-        }
-
-        /// <summary>
-        /// This event will be raised when the group Popup's IsOpen has been set to true.
-        /// </summary>
-        public event EventHandler<GroupViewOpenedEventArgs> GroupViewOpened;
-        
-        /// <summary>
-        /// This event will be raised then the group Popup is about to close.
-        /// </summary>
-        public event EventHandler<GroupViewClosingEventArgs> GroupViewClosing;
-
+       
         private void OpenPopup()
         {
             SaveSystemState(false, false);
             BuildPopup();
-            AttachToPageEvents();
+            AttachToPageEvents();            
             _groupSelectorPopup.IsOpen = true;
 
             // This has to happen eventually anyway, and this forces the ItemsControl to 
             // expand it's template, populate it's items etc.
-            UpdateLayout(); 
+            UpdateLayout();            
+        }
 
-
+        void popup_Opened(object sender, EventArgs e)
+        {
             SafeRaise.Raise(GroupViewOpened, this, () => { return new GroupViewOpenedEventArgs(_itemsControl); });
         }
 
         /// <summary>
-        /// Close the group popup.
+        /// Closes the group popup.
         /// </summary>
         /// <param name="selectedGroup">The selected group.</param>
         /// <param name="raiseEvent">Should the GroupPopupClosing event be raised.</param>
@@ -84,7 +56,7 @@ namespace Microsoft.Phone.Controls
             if (raiseEvent)
             {
                 GroupViewClosingEventArgs args = null;
-                
+
                 SafeRaise.Raise(GroupViewClosing, this, () => { return args = new GroupViewClosingEventArgs(_itemsControl, selectedGroup); });
 
                 if (args != null && args.Cancel)
@@ -110,27 +82,24 @@ namespace Microsoft.Phone.Controls
         private void BuildPopup()
         {
             _groupSelectorPopup = new Popup();
+            _groupSelectorPopup.Opened += popup_Opened;
 
             var bg = (Color)Resources["PhoneBackgroundColor"];
             _border = new Border
-            { 
+            {
                 Background = new SolidColorBrush(
                     Color.FromArgb(0xa0, bg.R, bg.G, bg.B))
             };
             
-            GestureListener listener = GestureService.GetGestureListener(_border);
-            listener.GestureBegin += HandleGesture;
-            listener.GestureCompleted += HandleGesture;
-            listener.DoubleTap += HandleGesture;
-            listener.DragCompleted += HandleGesture;
-            listener.DragDelta += HandleGesture;
-            listener.DragStarted += HandleGesture;
-            listener.Flick += HandleGesture;
-            listener.Hold += HandleGesture;
-            listener.PinchCompleted += HandleGesture;
-            listener.PinchDelta += HandleGesture;
-            listener.PinchStarted += HandleGesture;
-            listener.Tap += HandleGesture;
+            // Prevents touch events from bubbling up for most handlers.
+            _border.ManipulationStarted += ((o, e) => e.Handled = true);
+            _border.ManipulationCompleted += ((o, e) => e.Handled = true);
+            _border.ManipulationDelta += ((o, e) => e.Handled = true);
+            
+            var gestureHandler = new EventHandler<System.Windows.Input.GestureEventArgs>((o, e) => e.Handled = true);
+            _border.Tap += gestureHandler;
+            _border.DoubleTap += gestureHandler;
+            _border.Hold += gestureHandler;
 
             _itemsControl = new LongListSelectorItemsControl();
             _itemsControl.ItemTemplate = GroupItemTemplate;
@@ -142,18 +111,19 @@ namespace Microsoft.Phone.Controls
             _groupSelectorPopup.Child = _border;
             ScrollViewer sv = new ScrollViewer() { HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
 
+            _itemsControl.HorizontalAlignment = HorizontalAlignment.Center;
+            _itemsControl.Margin = new Thickness(0, 12, 0, 0);
             _border.Child = sv;
             sv.Content = _itemsControl;
 
             SetItemsControlSize();
         }
-
+        
         private void SetItemsControlSize()
         {
             Rect client = GetTransformedRect();
             if (_border != null)
             {
-                _border.Padding = new Thickness(18);
                 _border.RenderTransform = GetTransform();
 
                 _border.Width = client.Width;
@@ -278,5 +248,4 @@ namespace Microsoft.Phone.Controls
             }
         }
     }
-
 }

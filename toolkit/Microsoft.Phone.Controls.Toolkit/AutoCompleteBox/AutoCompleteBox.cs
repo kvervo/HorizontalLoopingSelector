@@ -2496,9 +2496,8 @@ namespace System.Windows.Controls
             if (TextBox != null)
             {
                 TextBox.Select(TextBox.Text.Length, 0);
+                TextBox.Focus();
             }
-
-            Focus();
         }
 
         /// <summary>

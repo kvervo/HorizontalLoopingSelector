@@ -100,11 +100,18 @@ namespace Microsoft.Phone.Controls
         public void Begin()
         {
             Save();
-            _storyboard.Completed += delegate
-            {
-                Restore();
-            };
+            _storyboard.Completed += OnCompletedRestore;
             _storyboard.Begin();
+        }
+
+        /// <summary>
+        /// Restores the settings for the transition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCompletedRestore(object sender, EventArgs e)
+        {
+            Restore();
         }
 
         /// <summary>
@@ -149,6 +156,13 @@ namespace Microsoft.Phone.Controls
             {
                 _element.IsHitTestVisible = _isHitTestVisible;
             }
+            else
+            {
+                // This is resolving a bug where the new page cannot be used.
+                // This may regress some scenarios for unsupported uses of the
+                // transitions.
+                _element.IsHitTestVisible = true;
+            }
         }
 
         /// <summary>
@@ -172,7 +186,7 @@ namespace Microsoft.Phone.Controls
             _cacheMode = _element.CacheMode;
             if (!(_cacheMode is BitmapCache))
             {
-                _element.CacheMode = new BitmapCache();
+                _element.CacheMode = TransitionFrame.BitmapCacheMode;
             }
             _isHitTestVisible = _element.IsHitTestVisible;
             if (_isHitTestVisible)
@@ -189,7 +203,7 @@ namespace Microsoft.Phone.Controls
         {
             _storyboard.Seek(offset);
         }
-        
+
         /// <summary>
         /// Mirrors <see cref="M:System.Windows.Media.Animation.Storyboard.SeekAlignedToLastTick"/>.
         /// </summary>

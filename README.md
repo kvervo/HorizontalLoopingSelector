@@ -1,5 +1,5 @@
-Horizontal Looping Selector for the WP7 Toolkit
-===============================================
+Horizontal Looping Selector for the WP7 Toolkit Mango Update
+============================================================
 The [Silverlight Toolkit](http://silverlight.codeplex.com/ "Silverlight Toolkit for WP7")for Windows Phone 7 contains a lot of really useful controls. One of them is the LoopingSelector which is used by the DatePicker control.
 
 However the limitation of the current Looping Selector is that expands only vertically. I wanted to do it horizontally.

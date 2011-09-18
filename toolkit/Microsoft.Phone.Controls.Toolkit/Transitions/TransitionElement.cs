@@ -10,6 +10,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Transition factory for a particular transition family.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public abstract class TransitionElement : DependencyObject
     {
         /// <summary>

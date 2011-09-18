@@ -5,11 +5,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Diagnostics.CodeAnalysis;
 
 // This is a very special primitive control that works around a limitation in
 // the core animation subsystem of Silverlight: there is no way to declare in
@@ -39,6 +39,7 @@ namespace Microsoft.Phone.Controls.Primitives
     /// It is used to enable a Windows Phone native platform-style progress bar
     /// experience in indeterminate mode that remains performant.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public class RelativeAnimatingContentControl : ContentControl
     {
         /// <summary>
@@ -321,8 +322,8 @@ namespace Microsoft.Phone.Controls.Primitives
             /// partially magic; otherwise, returns null.</returns>
             public static DoubleAnimationDimension? GetDimensionFromMagicNumber(double number)
             {
-                double floor = Math.Floor(number);
-                double remainder = number - floor;
+                double round = Math.Round(number);
+                double remainder = Math.Abs(number - round);
 
                 if (remainder >= .1 - SimpleDoubleComparisonEpsilon && remainder <= .1 + SimpleDoubleComparisonEpsilon)
                 {

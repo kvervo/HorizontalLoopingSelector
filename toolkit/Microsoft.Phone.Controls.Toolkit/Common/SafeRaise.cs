@@ -4,6 +4,7 @@
 // All other rights reserved.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Phone.Controls
 {
@@ -17,6 +18,7 @@ namespace Microsoft.Phone.Controls
         /// </summary>
         /// <param name="eventToRaise">The event to raise.</param>
         /// <param name="sender">The event sender.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Keeping existing implementation.")]
         public static void Raise(EventHandler eventToRaise, object sender)
         {
             if (eventToRaise != null)

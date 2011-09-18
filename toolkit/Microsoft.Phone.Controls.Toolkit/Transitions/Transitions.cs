@@ -19,6 +19,7 @@ namespace Microsoft.Phone.Controls
     /// <see cref="T:Microsoft.Phone.Controls.ITransition"/>s
     /// for transition families and modes.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     internal static class Transitions
     {
         /// <summary>

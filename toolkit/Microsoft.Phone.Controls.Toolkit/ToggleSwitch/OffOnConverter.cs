@@ -13,6 +13,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Converts bool? values to "Off" and "On" strings.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public class OffOnConverter : IValueConverter
     {
         /// <summary>

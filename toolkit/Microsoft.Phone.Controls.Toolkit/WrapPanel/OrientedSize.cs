@@ -16,6 +16,7 @@ namespace System.Windows.Controls
     /// element in the row.  When the orientation is reversed, so is the
     /// directional growth with respect to Width and Height.
     /// </summary>
+    /// <QualityBand>Mature</QualityBand>
     [StructLayout(LayoutKind.Sequential)]
     internal struct OrientedSize
     {

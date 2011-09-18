@@ -4,18 +4,18 @@
 // All other rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Collections.Generic;
-using System.Windows.Controls.Primitives;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 #if WINDOWS_PHONE
-using Microsoft.Phone.Controls;
+
 #endif
 
 namespace Microsoft.Phone.Controls
@@ -24,6 +24,7 @@ namespace Microsoft.Phone.Controls
     /// This code provides attached properties for adding a 'tilt' effect to all 
     /// controls within a container.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [SuppressMessage("Microsoft.Design", "CA1052:StaticHolderTypesShouldBeSealed", Justification = "Cannot be static and derive from DependencyObject.")]
     public partial class TiltEffect : DependencyObject
     {
@@ -121,6 +122,7 @@ namespace Microsoft.Phone.Controls
             { 
                 typeof(ButtonBase), 
                 typeof(ListBoxItem), 
+                typeof(MenuItem),
             };
         }
 
@@ -276,25 +278,39 @@ namespace Microsoft.Phone.Controls
                 {
                     if (t.IsAssignableFrom(ancestor.GetType()))
                     {
-                        if ((bool)ancestor.GetValue(SuppressTiltProperty) != true)
+                        FrameworkElement elementSuppressingTilt = null;
+
+                        // Look up the tree to find either an explicit DO or DO NOT suppress.
+                        if (ancestor.ReadLocalValue(SuppressTiltProperty) is bool)
                         {
-                            // Use first child of the control, so that you can add transforms and not
-                            // impact any transforms on the control itself
+                            elementSuppressingTilt = ancestor;
+                        }
+                        else
+                        {
+                            elementSuppressingTilt = ancestor.GetVisualAncestors().FirstOrDefault(x => x.ReadLocalValue(SuppressTiltProperty) is bool);
+                        }
+
+                        if (elementSuppressingTilt != null && (bool)elementSuppressingTilt.ReadLocalValue(SuppressTiltProperty) == true)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            // Use first child of the control, so that we can add transforms and not
+                            // impact any transforms on the control itself.
                             FrameworkElement element = VisualTreeHelper.GetChild(ancestor, 0) as FrameworkElement;
                             FrameworkElement container = e.ManipulationContainer as FrameworkElement;
 
                             if (element == null || container == null)
-                            {
                                 return;
-                            }
 
-                            // Touch point relative to the element being tilted
+                            // Touch point relative to the element being tilted.
                             Point tiltTouchPoint = container.TransformToVisual(element).Transform(e.ManipulationOrigin);
 
-                            // Center of the element being tilted
+                            // Center of the element being tilted.
                             Point elementCenter = new Point(element.ActualWidth / 2, element.ActualHeight / 2);
 
-                            // Camera adjustment
+                            // Camera adjustment.
                             Point centerToCenterDelta = GetCenterToCenterDelta(element, source);
 
                             BeginTiltEffect(element, tiltTouchPoint, elementCenter, centerToCenterDelta);

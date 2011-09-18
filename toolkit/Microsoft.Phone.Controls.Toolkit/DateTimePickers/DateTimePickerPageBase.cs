@@ -109,12 +109,12 @@ namespace Microsoft.Phone.Controls.Primitives
                     {
                         if ("DONE" == button.Text)
                         {
-                            button.Text = Properties.Resources.DateTimePickerDoneText;
+                            button.Text = LocalizedResources.ControlResources.DateTimePickerDoneText;
                             button.Click += new EventHandler(HandleDoneButtonClick);
                         }
                         else if ("CANCEL" == button.Text)
                         {
-                            button.Text = Properties.Resources.DateTimePickerCancelText;
+                            button.Text = LocalizedResources.ControlResources.DateTimePickerCancelText;
                             button.Click += new EventHandler(HandleCancelButtonClick);
                         }
                     }

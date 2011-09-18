@@ -358,7 +358,6 @@ namespace System.Windows.Controls
             UIElement u = Parent;
             if (Application.Current.Windows.Count > 0)
             {
-                // TODO: USE THE CURRENT WINDOW INSTEAD! WALK THE TREE!
                 u = Application.Current.Windows[0];
             }
             while ((u as Window) == null && u != null)
@@ -579,9 +578,6 @@ namespace System.Windows.Controls
                 UsesClosingVisualState = true;
             }
 
-            // TODO: Consider moving to the DropDownPopup setter
-            // TODO: Although in line with other implementations, what happens 
-            // when the template is swapped out?
             if (Popup != null)
             {
                 PopupChild = Popup.Child as FrameworkElement;

@@ -14,6 +14,7 @@ namespace Microsoft.Phone.Controls.Primitives
     /// <summary>
     /// Represents a switch that can be toggled between two states.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [TemplateVisualState(Name = NormalState, GroupName = CommonStates)]
     [TemplateVisualState(Name = DisabledState, GroupName = CommonStates)]
     [TemplateVisualState(Name = CheckedState, GroupName = CheckStates)]
@@ -234,19 +235,28 @@ namespace Microsoft.Phone.Controls.Primitives
             {
                 _thumb.SizeChanged -= SizeChangedHandler;
             }
+            if (_root != null)
+            {
+                _root.ManipulationStarted -= ManipulationStartedHandler;
+                _root.ManipulationDelta -= ManipulationDeltaHandler;
+                _root.ManipulationCompleted -= ManipulationCompletedHandler;
+            }
+
             base.OnApplyTemplate();
+
             _root = GetTemplateChild(SwitchRootPart) as Grid;
             UIElement background = GetTemplateChild(SwitchBackgroundPart) as UIElement;
             _backgroundTranslation = background == null ? null : background.RenderTransform as TranslateTransform;
             _track = GetTemplateChild(SwitchTrackPart) as Grid;
             _thumb = GetTemplateChild(SwitchThumbPart) as Border;
             _thumbTranslation = _thumb == null ? null : _thumb.RenderTransform as TranslateTransform;
+
             if (_root != null && _track != null && _thumb != null && (_backgroundTranslation != null || _thumbTranslation != null))
             {
-                GestureListener gestureListener = GestureService.GetGestureListener(_root);
-                gestureListener.DragStarted += DragStartedHandler;
-                gestureListener.DragDelta += DragDeltaHandler;
-                gestureListener.DragCompleted += DragCompletedHandler;
+                _root.ManipulationStarted += ManipulationStartedHandler;
+                _root.ManipulationDelta += ManipulationDeltaHandler;
+                _root.ManipulationCompleted += ManipulationCompletedHandler;
+
                 _track.SizeChanged += SizeChangedHandler;
                 _thumb.SizeChanged += SizeChangedHandler;
             }
@@ -258,7 +268,7 @@ namespace Microsoft.Phone.Controls.Primitives
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event information.</param>
-        private void DragStartedHandler(object sender, DragStartedGestureEventArgs e)
+        private void ManipulationStartedHandler(object sender, System.Windows.Input.ManipulationStartedEventArgs e)
         {
             e.Handled = true;
             _isDragging = true;
@@ -272,23 +282,20 @@ namespace Microsoft.Phone.Controls.Primitives
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event information.</param>
-        private void DragDeltaHandler(object sender, DragDeltaGestureEventArgs e)
+        private void ManipulationDeltaHandler(object sender, System.Windows.Input.ManipulationDeltaEventArgs e)
         {
             e.Handled = true;
-            if (e.Direction == Orientation.Horizontal && e.HorizontalChange != 0)
+            double horizontalChange = e.DeltaManipulation.Translation.X;
+            Orientation direction = Math.Abs(horizontalChange) >= Math.Abs(e.DeltaManipulation.Translation.Y) ? Orientation.Horizontal : Orientation.Vertical;
+            if (direction == Orientation.Horizontal && horizontalChange != 0)
             {
                 _wasDragged = true;
-                _dragTranslation += e.HorizontalChange;
+                _dragTranslation += horizontalChange;
                 Translation = Math.Max(_uncheckedTranslation, Math.Min(_checkedTranslation, _dragTranslation));
             }
         }
 
-        /// <summary>
-        /// Handles completed drags on the root.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event information.</param>
-        private void DragCompletedHandler(object sender, DragCompletedGestureEventArgs e)
+        private void ManipulationCompletedHandler(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
         {
             e.Handled = true;
             _isDragging = false;

@@ -16,6 +16,7 @@ namespace Microsoft.Phone.Controls.Primitives
     /// <summary>
     /// An infinitely scrolling, UI- and data-virtualizing selection control.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [TemplatePart(Name = ItemsPanelName, Type = typeof(Panel))]
     [TemplatePart(Name = CenteringTransformName, Type = typeof(TranslateTransform))]
     [TemplatePart(Name = PanningTransformName, Type = typeof(TranslateTransform))]
@@ -25,6 +26,9 @@ namespace Microsoft.Phone.Controls.Primitives
         private const string ItemsPanelName = "ItemsPanel";
         private const string CenteringTransformName = "CenteringTransform";
         private const string PanningTransformName = "PanningTransform";
+        
+        // Amount of finger movement before the manipulation is considered a dragging manipulation.
+        private const double DragSensitivity = 12;
 
         private static readonly Duration _selectDuration = new Duration(TimeSpan.FromMilliseconds(500));
         private readonly IEasingFunction _selectEase = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
@@ -50,6 +54,15 @@ namespace Microsoft.Phone.Controls.Primitives
         private int _additionalItemsCount = 0;
 
         private bool _isAnimating;
+
+        private double _dragTarget;
+
+        // Once the user starts dragging horizontally, he is not allowed to drag vertically
+        // until he completes his touch gesture and starts again.
+        private bool _isAllowedToDragVertically = true;
+
+        // Specify whether or not the user is dragging with his finger.
+        private bool _isDragging;
 
         private enum State
         {
@@ -94,7 +107,7 @@ namespace Microsoft.Phone.Controls.Primitives
             if (!_isSelecting && e.AddedItems.Count == 1)
             {
                 object selection = e.AddedItems[0];
-                //Debug.WriteLine("Selecting {0}", selection);
+
                 foreach (LoopingSelectorItem child in _itemsPanel.Children)
                 {
                     if (child.DataContext == selection)
@@ -129,7 +142,7 @@ namespace Microsoft.Phone.Controls.Primitives
             if (!_isSelecting && e.AddedItems.Count == 1)
             {
                 object selection = e.AddedItems[0];
-                //Debug.WriteLine("Selecting {0}", selection);
+
                 foreach (LoopingSelectorItem child in _itemsPanel.Children)
                 {
                     if (child.DataContext == selection)
@@ -237,10 +250,8 @@ namespace Microsoft.Phone.Controls.Primitives
             CreateVisuals();
         }
 
-
         void LoopingSelector_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //Debug.WriteLine("MouseLeftButtonDown {0}", sender);
             if (_isAnimating)
             {
                 double y = _panningTransform.Y;
@@ -253,7 +264,6 @@ namespace Microsoft.Phone.Controls.Primitives
 
         void LoopingSelector_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //Debug.WriteLine("MouseLeftButtonUp {0}", sender);
             if (_selectedItem != sender && _state == State.Dragging && !_isAnimating)
             {
                 SelectAndSnapToClosest();
@@ -261,84 +271,87 @@ namespace Microsoft.Phone.Controls.Primitives
             }
         }
 
-        void listener_Tap(object sender, GestureEventArgs e)
+        #region Touch Events
+        private void OnTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            //Debug.WriteLine("listener_Tap");
-            
             if (_panningTransform != null)
             {
                 SelectAndSnapToClosest();
                 e.Handled = true;
             }
         }
-        double _dragTarget;
 
-        void listener_DragStarted(object sender, DragStartedGestureEventArgs e)
+        private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            //Debug.WriteLine("listener_DragStarted");
-            
-            if (e.Direction == Orientation.Vertical)
+            _isAllowedToDragVertically = true;
+            _isDragging = false;
+        }
+
+        private void OnManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+        {
+            if (_isDragging)
             {
+                AnimatePanel(_panDuration, _panEase, _dragTarget += e.DeltaManipulation.Translation.Y);
+                e.Handled = true;
+            }
+            else if (Math.Abs(e.CumulativeManipulation.Translation.X) > DragSensitivity)
+            {
+                _isAllowedToDragVertically = false;
+            }
+            else if (_isAllowedToDragVertically && Math.Abs(e.CumulativeManipulation.Translation.Y) > DragSensitivity)
+            {
+                _isDragging = true;
                 _state = State.Dragging;
                 e.Handled = true;
                 _selectedItem = null;
+
                 if (!IsExpanded)
                 {
                     IsExpanded = true;
                 }
+
                 _dragTarget = _panningTransform.Y;
                 UpdateItemState();
             }
         }
 
-        void listener_DragDelta(object sender, DragDeltaGestureEventArgs e)
+        private void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            //Debug.WriteLine("listener_DragDelta");
-
-            if (e.Direction == Orientation.Vertical && _state == State.Dragging)
+            if (_isDragging)
             {
-                AnimatePanel(_panDuration, _panEase, _dragTarget += e.VerticalChange);
-                e.Handled = true;
-            }
-        }
-
-        void listener_DragCompleted(object sender, DragCompletedGestureEventArgs e)
-        {
-            //Debug.WriteLine("listener_DragCompleted");
-            if (_state == State.Dragging)
-            {
-                SelectAndSnapToClosest();
-            }
-            _state = State.Expanded;
-        }
-
-        void listener_Flick(object sender, FlickGestureEventArgs e)
-        {
-            //Debug.WriteLine("listener_Flick");
-
-            if (e.Direction == Orientation.Vertical)
-            {
-                _state = State.Flicking;
-
-                _selectedItem = null;
-                if (!IsExpanded)
+                // See if it was a flick
+                if (e.IsInertial)
                 {
-                    IsExpanded = true;
-                } 
-                
-                Point velocity = new Point(0, e.VerticalVelocity);
-                double flickDuration = PhysicsConstants.GetStopTime(velocity);
-                Point flickEndPoint = PhysicsConstants.GetStopPoint(velocity);
-                IEasingFunction flickEase = PhysicsConstants.GetEasingFunction(flickDuration);
+                    _state = State.Flicking;
+                    _selectedItem = null;
 
-                AnimatePanel(new Duration(TimeSpan.FromSeconds(flickDuration)), flickEase, _panningTransform.Y + flickEndPoint.Y);
+                    if (!IsExpanded)
+                    {
+                        IsExpanded = true;
+                    }
 
-                e.Handled = true;
+                    Point velocity = new Point(0, e.FinalVelocities.LinearVelocity.Y);
+                    double flickDuration = PhysicsConstants.GetStopTime(velocity);
+                    Point flickEndPoint = PhysicsConstants.GetStopPoint(velocity);
+                    IEasingFunction flickEase = PhysicsConstants.GetEasingFunction(flickDuration);
 
-                _selectedItem = null;
-                UpdateItemState();
+                    AnimatePanel(new Duration(TimeSpan.FromSeconds(flickDuration)), flickEase, _panningTransform.Y + flickEndPoint.Y);
+
+                    e.Handled = true;
+
+                    _selectedItem = null;
+                    UpdateItemState();
+                }
+
+                if (_state == State.Dragging)
+                {
+                    SelectAndSnapToClosest();
+                }
+
+                _state = State.Expanded;
             }
         }
+        #endregion
 
         void LoopingSelector_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -349,8 +362,6 @@ namespace Microsoft.Phone.Controls.Primitives
 
         void wrapper_Click(object sender, EventArgs e)
         {
-            //Debug.WriteLine("wrapper_Click");
-
             if (_state == State.Normal)
             {
                 _state = State.Expanded;
@@ -365,7 +376,6 @@ namespace Microsoft.Phone.Controls.Primitives
                 }
                 else if (sender != _selectedItem && !_isAnimating)
                 {
-                    //Debug.WriteLine("Selecting from wrapper_Click {0}", sender);
                     SelectAndSnapTo((LoopingSelectorItem)sender);
                 }
             }
@@ -705,7 +715,6 @@ namespace Microsoft.Phone.Controls.Primitives
             }
 
             LoopingSelectorItem item = (LoopingSelectorItem) _itemsPanel.Children[index];
-            //Debug.WriteLine("Selecting from SelectAndSnapToClosest {0}", item.DataContext);
             SelectAndSnapTo(item);
         }
 
@@ -749,17 +758,16 @@ namespace Microsoft.Phone.Controls.Primitives
         {
 
             SizeChanged += new SizeChangedEventHandler(LoopingSelector_SizeChanged);
+            
+            this.ManipulationStarted += new EventHandler<ManipulationStartedEventArgs>(OnManipulationStarted);
+            this.ManipulationCompleted += new EventHandler<ManipulationCompletedEventArgs>(OnManipulationCompleted);
+            this.ManipulationDelta += new EventHandler<ManipulationDeltaEventArgs>(OnManipulationDelta);
 
-            GestureListener listener = GestureService.GetGestureListener(this);
-            listener.DragStarted += new EventHandler<DragStartedGestureEventArgs>(listener_DragStarted);
-            listener.DragDelta += new EventHandler<DragDeltaGestureEventArgs>(listener_DragDelta);
-            listener.DragCompleted += new EventHandler<DragCompletedGestureEventArgs>(listener_DragCompleted);
-            listener.Flick += new EventHandler<FlickGestureEventArgs>(listener_Flick);
-            listener.Tap += new EventHandler<GestureEventArgs>(listener_Tap);
+            this.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(OnTap);
 
             AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(LoopingSelector_MouseLeftButtonDown), true);
             AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(LoopingSelector_MouseLeftButtonUp), true);
-        }
+        }        
 
         private LoopingSelectorItem CreateAndAddItem(Panel parent, object content)
         {

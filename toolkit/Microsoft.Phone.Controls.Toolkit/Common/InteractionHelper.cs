@@ -23,9 +23,6 @@ namespace System.Windows.Controls
     /// </summary>
     internal sealed partial class InteractionHelper
     {
-        // TODO: Consult with user experience experts to validate the double
-        // click distance and time thresholds.
-
         /// <summary>
         /// The threshold used to determine whether two clicks are temporally
         /// local and considered a double click (or triple, quadruple, etc.).
@@ -396,8 +393,6 @@ namespace System.Windows.Controls
                 if (timeDelta < SequentialClickThresholdInMilliseconds &&
                     distance < SequentialClickThresholdInPixelsSquared)
                 {
-                    // TODO: Does each click have to be within the single time
-                    // threshold on WPF?
                     ClickCount++;
                 }
                 else

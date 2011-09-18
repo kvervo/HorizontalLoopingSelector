@@ -10,6 +10,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Represents a control that allows the user to choose a date (day/month/year).
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public class DatePicker : DateTimePickerBase
     {
         /// <summary>

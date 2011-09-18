@@ -4,11 +4,10 @@
 // All other rights reserved.
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Data;
 
 namespace Microsoft.Phone.Controls
 {
@@ -25,10 +24,21 @@ namespace Microsoft.Phone.Controls
     /// Use the standard ProgressBar control in the platform for determinate 
     /// scenarios as there is no performance benefit in determinate mode.
     /// </remarks>
+    /// <QualityBand>Preview</QualityBand>
     [TemplateVisualState(GroupName = VisualStateGroupName, Name = NormalState)]
     [TemplateVisualState(GroupName = VisualStateGroupName, Name = HiddenState)]
+    [TemplatePart(Name = EmbeddedProgressBarName, Type = typeof(ProgressBar))]
     public class PerformanceProgressBar : Control
     {
+        // Name of embedded progress bar.
+        private const string EmbeddedProgressBarName = "EmbeddedProgressBar";
+
+        // Embedded progress bar.
+        private ProgressBar _progressBar;
+
+        // Embedded progress bar binding - property path.
+        private static readonly PropertyPath ActualIsIndeterminatePath = new PropertyPath("ActualIsIndeterminate");
+
         #region Visual States
         private const string VisualStateGroupName = "VisibilityStates";
         private const string NormalState = "Normal";
@@ -41,6 +51,11 @@ namespace Microsoft.Phone.Controls
         /// indeterminate value to False.
         /// </summary>
         private VisualStateGroup _visualStateGroup;
+
+        /// <summary>
+        /// Gets or sets a value indicating the cached IsIndeterminate.
+        /// </summary>
+        private bool _cachedIsIndeterminate;
 
         #region public bool ActualIsIndeterminate
         /// <summary>
@@ -107,6 +122,9 @@ namespace Microsoft.Phone.Controls
             : base()
         {
             DefaultStyleKey = typeof(PerformanceProgressBar);
+
+            Unloaded += OnUnloaded;
+            Loaded += OnLoaded;
         }
 
         /// <summary>
@@ -128,6 +146,8 @@ namespace Microsoft.Phone.Controls
                 _visualStateGroup.CurrentStateChanged += OnVisualStateChanged;
             }
 
+            _progressBar = GetTemplateChild(EmbeddedProgressBarName) as ProgressBar;
+
             UpdateVisualStates(false);
         }
 
@@ -145,10 +165,12 @@ namespace Microsoft.Phone.Controls
             if (newValue)
             {
                 ActualIsIndeterminate = true;
+                _cachedIsIndeterminate = true;
             }
             else if (ActualIsIndeterminate && _visualStateGroup == null)
             {
                 ActualIsIndeterminate = false;
+                _cachedIsIndeterminate = false;
             }
             // else: visual state changed handler will take care of this.
 
@@ -158,9 +180,27 @@ namespace Microsoft.Phone.Controls
         private void UpdateVisualStates(bool useTransitions)
         {
             VisualStateManager.GoToState(
-                this, 
-                IsIndeterminate ? NormalState : HiddenState, 
+                this,
+                IsIndeterminate ? NormalState : HiddenState,
                 useTransitions);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs ea)
+        {
+            if (_progressBar != null)
+            {
+                _cachedIsIndeterminate = IsIndeterminate;
+                _progressBar.IsIndeterminate = false;
+            }
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs ea)
+        {
+            if (_progressBar != null)
+            {
+                IsIndeterminate = _cachedIsIndeterminate;
+                _progressBar.SetBinding(ProgressBar.IsIndeterminateProperty, new Binding() { Source = this, Path = ActualIsIndeterminatePath });
+            }
         }
 
         private static T FindFirstChildOfType<T>(DependencyObject root) where T : class

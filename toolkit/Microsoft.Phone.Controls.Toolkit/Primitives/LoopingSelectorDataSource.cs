@@ -11,6 +11,7 @@ namespace Microsoft.Phone.Controls.Primitives
     /// <summary>
     /// Defines how the LoopingSelector communicates with data source.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public interface ILoopingSelectorDataSource
     {
         /// <summary>

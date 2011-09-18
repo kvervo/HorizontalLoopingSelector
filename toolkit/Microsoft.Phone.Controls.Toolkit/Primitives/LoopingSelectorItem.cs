@@ -14,6 +14,7 @@ namespace Microsoft.Phone.Controls.Primitives
     /// <summary>
     /// The items that will be contained in the LoopingSelector.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [TemplatePart(Name = TransformPartName, Type = typeof(TranslateTransform))]
     [TemplateVisualState(GroupName = CommonGroupName, Name = NormalStateName)]
     [TemplateVisualState(GroupName = CommonGroupName, Name = ExpandedStateName)]
@@ -55,10 +56,11 @@ namespace Microsoft.Phone.Controls.Primitives
         public LoopingSelectorItem()
         {
             DefaultStyleKey = typeof(LoopingSelectorItem);
+
             MouseLeftButtonDown += LoopingSelectorItem_MouseLeftButtonDown;
             MouseLeftButtonUp += LoopingSelectorItem_MouseLeftButtonUp;
             LostMouseCapture += LoopingSelectorItem_LostMouseCapture;
-            GestureService.GetGestureListener(this).Tap += new EventHandler<GestureEventArgs>(LoopingSelectorItem_Tap);
+            Tap += LoopingSelectorItem_Tap;
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Microsoft.Phone.Controls.Primitives
         /// <returns>The current state.</returns>
         internal State GetState() { return _state; }
 
-        void LoopingSelectorItem_Tap(object sender, GestureEventArgs e)
+        void LoopingSelectorItem_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             e.Handled = true;
         }

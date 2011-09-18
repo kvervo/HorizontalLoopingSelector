@@ -11,6 +11,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Represents a control that allows the user to choose a time (hour/minute/am/pm).
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public class TimePicker : DateTimePickerBase
     {
         private string _fallbackValueStringFormat;

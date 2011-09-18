@@ -33,18 +33,17 @@ namespace Microsoft.Phone.Controls
             protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
             {
                 base.PrepareContainerForItemOverride(element, item);
-
-                GestureService.GetGestureListener(element).Tap += LongListSelectorItemsControl_Tap;
+                ((UIElement)element).Tap += LongListSelectorItemsControl_Tap;
             }
 
             protected override void ClearContainerForItemOverride(DependencyObject element, object item)
             {
                 base.ClearContainerForItemOverride(element, item);
 
-                GestureService.GetGestureListener(element).Tap -= LongListSelectorItemsControl_Tap;
+                ((UIElement)element).Tap -= LongListSelectorItemsControl_Tap;
             }
 
-            private void LongListSelectorItemsControl_Tap(object sender, GestureEventArgs e)
+            private void LongListSelectorItemsControl_Tap(object sender, System.Windows.Input.GestureEventArgs e)
             {
                 ContentPresenter cc = sender as ContentPresenter;
                 if (cc != null)
@@ -55,6 +54,7 @@ namespace Microsoft.Phone.Controls
                         GroupSelectedEventArgs args = new GroupSelectedEventArgs(cc.Content);
                         handler(this, args);
                     }
+
                 }
             }
         }

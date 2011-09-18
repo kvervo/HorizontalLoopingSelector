@@ -11,6 +11,7 @@ namespace Microsoft.Phone.Controls
     /// <summary>
     /// Class that implements a container for the ListPicker control.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     [TemplateVisualState(GroupName = SelectionStatesGroupName, Name = SelectionStatesUnselectedStateName)]
     [TemplateVisualState(GroupName = SelectionStatesGroupName, Name = SelectionStatesSelectedStateName)]
     public class ListPickerItem : ContentControl

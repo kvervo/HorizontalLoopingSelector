@@ -12,6 +12,7 @@ namespace Microsoft.Phone.Controls
     /// Provides attached properties for navigation
     /// <see cref="T:Microsoft.Phone.Controls.ITransition"/>s.
     /// </summary>
+    /// <QualityBand>Preview</QualityBand>
     public static class TransitionService
     {
         /// <summary>

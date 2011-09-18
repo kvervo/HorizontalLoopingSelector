@@ -16,11 +16,11 @@ namespace Microsoft.Phone.Controls
         /// <summary>
         /// Gets the localized DatePicker title string.
         /// </summary>
-        public static string DatePickerTitle { get { return Properties.Resources.DatePickerTitle; } }
+        public static string DatePickerTitle { get { return LocalizedResources.ControlResources.DatePickerTitle; } }
 
         /// <summary>
         /// Gets the localized TimePicker title string.
         /// </summary>
-        public static string TimePickerTitle { get { return Properties.Resources.TimePickerTitle; } }
+        public static string TimePickerTitle { get { return LocalizedResources.ControlResources.TimePickerTitle; } }
     }
 }

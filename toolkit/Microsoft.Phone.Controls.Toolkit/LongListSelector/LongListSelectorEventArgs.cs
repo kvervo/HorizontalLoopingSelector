@@ -65,5 +65,4 @@ namespace Microsoft.Phone.Controls
         /// </summary>
         public bool Cancel { get; set; }
     }
-
 }

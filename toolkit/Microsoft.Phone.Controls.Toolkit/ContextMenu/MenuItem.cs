@@ -9,15 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-#if WINDOWS_PHONE
 using Microsoft.Phone.Controls.Primitives;
-#endif
 
-#if WINDOWS_PHONE
 namespace Microsoft.Phone.Controls
-#else
-namespace System.Windows.Controls
-#endif
 {
     /// <summary>
     /// Represents a selectable item inside a Menu or ContextMenu.
@@ -127,26 +121,6 @@ namespace System.Windows.Controls
             UpdateIsEnabled(true);
         }
 
-#if !WINDOWS_PHONE
-        /// <summary>
-        /// Gets or sets the icon that appears in a MenuItem.
-        /// </summary>
-        public object Icon
-        {
-            get { return GetValue(IconProperty); }
-            set { SetValue(IconProperty, value); }
-        }
-
-        /// <summary>
-        /// Identifies the Icon dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            "Icon",
-            typeof(object),
-            typeof(MenuItem),
-            new PropertyMetadata(null));
-#endif
-
         /// <summary>
         /// Initializes a new instance of the MenuItem class.
         /// </summary>
@@ -155,6 +129,7 @@ namespace System.Windows.Controls
         {
             DefaultStyleKey = typeof(MenuItem);
             IsEnabledChanged += new DependencyPropertyChangedEventHandler(HandleIsEnabledChanged);
+            SetValue(TiltEffect.IsTiltEnabledProperty, true);
             Loaded += new RoutedEventHandler(HandleLoaded);
             UpdateIsEnabled(false);
         }
@@ -215,19 +190,11 @@ namespace System.Windows.Controls
             ChangeVisualState(true);
         }
 
-#if WINDOWS_PHONE
         /// <summary>
         /// Called when the left mouse button is released.
         /// </summary>
         /// <param name="e">The event data for the MouseLeftButtonUp event.</param>
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-#else
-        /// <summary>
-        /// Called when the left mouse button is pressed.
-        /// </summary>
-        /// <param name="e">The event data for the MouseLeftButtonDown event.</param>
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-#endif
         {
             if (e == null)
             {
@@ -239,28 +206,9 @@ namespace System.Windows.Controls
                 OnClick();
                 e.Handled = true;
             }
-#if WINDOWS_PHONE
-            base.OnMouseLeftButtonUp(e);
-#else
-            base.OnMouseLeftButtonDown(e);
-#endif
-        }
 
-#if !WINDOWS_PHONE
-        /// <summary>
-        /// Called when the right mouse button is pressed.
-        /// </summary>
-        /// <param name="e">The event data for the MouseRightButtonDown event.</param>
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                OnClick();
-                e.Handled = true;
-            }
-            base.OnMouseRightButtonDown(e);
+            base.OnMouseLeftButtonUp(e);
         }
-#endif
 
         /// <summary>
         /// Responds to the KeyDown event.
