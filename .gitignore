@@ -1,6 +1,9 @@
-toolkit/Bin/
-toolkit/obj/
 *.suo
 *.docstates
+
+toolkit/Bin/
+toolkit/obj/
+toolkit/Microsoft.Phone.Controls.Toolkit/Bin
+toolkit/Microsoft.Phone.Controls.Toolkit/obj
 HorizontalLoopingSelectorSample/Bin
 HorizontalLoopingSelectorSample/obj
