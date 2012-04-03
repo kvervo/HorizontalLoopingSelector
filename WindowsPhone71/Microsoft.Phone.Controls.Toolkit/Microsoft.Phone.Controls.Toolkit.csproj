@@ -20,10 +20,14 @@
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\PhoneToolkit.snk</AssemblyOriginatorKeyFile>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -266,6 +270,8 @@
     <Compile Include="Common\ItemsControlExtensions.cs" />
     <Compile Include="MultiselectList\MultiselectItem.cs" />
     <Compile Include="MultiselectList\MultiselectList.cs" />
+    <Compile Include="Primitives\HorizonatlLoopingSelectorItem.cs" />
+    <Compile Include="Primitives\HorizontalLoopingSelector.cs" />
     <Compile Include="Primitives\LoopingSelectorDataSource.cs" />
     <Compile Include="Primitives\LoopingSelector.cs" />
     <Compile Include="Primitives\LoopingSelectorItem.cs" />
